@@ -48,8 +48,10 @@ public class FlatArrowButton
 	protected Color pressedBackground;
 
 	private int arrowWidth = DEFAULT_ARROW_WIDTH;
+	private float arrowThickness = 1;
 	private float xOffset = 0;
 	private float yOffset = 0;
+	private boolean roundBorderAutoXOffset = true;
 
 	private boolean hover;
 	private boolean pressed;
@@ -116,6 +118,16 @@ public class FlatArrowButton
 		this.arrowWidth = arrowWidth;
 	}
 
+	/** @since 3 */
+	public float getArrowThickness() {
+		return arrowThickness;
+	}
+
+	/** @since 3 */
+	public void setArrowThickness( float arrowThickness ) {
+		this.arrowThickness = arrowThickness;
+	}
+
 	protected boolean isHover() {
 		return hover;
 	}
@@ -138,6 +150,16 @@ public class FlatArrowButton
 
 	public void setYOffset( float yOffset ) {
 		this.yOffset = yOffset;
+	}
+
+	/** @since 3 */
+	public boolean isRoundBorderAutoXOffset() {
+		return roundBorderAutoXOffset;
+	}
+
+	/** @since 3 */
+	public void setRoundBorderAutoXOffset( boolean roundBorderAutoXOffset ) {
+		this.roundBorderAutoXOffset = roundBorderAutoXOffset;
 	}
 
 	protected Color deriveBackground( Color background ) {
@@ -203,14 +225,17 @@ public class FlatArrowButton
 	}
 
 	protected void paintArrow( Graphics2D g ) {
-		boolean vert = (direction == NORTH || direction == SOUTH);
 		int x = 0;
 
 		// move arrow for round borders
-		Container parent = getParent();
-		if( vert && parent instanceof JComponent && FlatUIUtils.hasRoundBorder( (JComponent) parent ) )
-			x -= scale( parent.getComponentOrientation().isLeftToRight() ? 1 : -1 );
+		if( isRoundBorderAutoXOffset() ) {
+			Container parent = getParent();
+			boolean vert = (direction == NORTH || direction == SOUTH);
+			if( vert && parent instanceof JComponent && FlatUIUtils.hasRoundBorder( (JComponent) parent ) )
+				x -= scale( parent.getComponentOrientation().isLeftToRight() ? 1 : -1 );
+		}
 
-		FlatUIUtils.paintArrow( g, x, 0, getWidth(), getHeight(), getDirection(), chevron, getArrowWidth(), getXOffset(), getYOffset() );
+		FlatUIUtils.paintArrow( g, x, 0, getWidth(), getHeight(), getDirection(), chevron,
+			getArrowWidth(), getArrowThickness(), getXOffset(), getYOffset() );
 	}
 }

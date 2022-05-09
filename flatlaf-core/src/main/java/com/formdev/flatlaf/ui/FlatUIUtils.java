@@ -335,7 +335,7 @@ public class FlatUIUtils
 	 */
 	public static Object[] setRenderingHints( Graphics g ) {
 		Graphics2D g2 = (Graphics2D) g;
-		Object[] oldRenderingHints = new Object[] {
+		Object[] oldRenderingHints = {
 			g2.getRenderingHint( RenderingHints.KEY_ANTIALIASING ),
 			g2.getRenderingHint( RenderingHints.KEY_STROKE_CONTROL ),
 		};
@@ -376,7 +376,7 @@ public class FlatUIUtils
 		}
 
 		Graphics2D g2 = (Graphics2D) g;
-		Object[] oldRenderingHints2 = new Object[] {
+		Object[] oldRenderingHints2 = {
 			g2.getRenderingHint( RenderingHints.KEY_ANTIALIASING ),
 			g2.getRenderingHint( RenderingHints.KEY_STROKE_CONTROL ),
 		};
@@ -777,13 +777,15 @@ public class FlatUIUtils
 	 *        {@link SwingConstants#WEST} or {@link SwingConstants#EAST})
 	 * @param chevron {@code true} for chevron arrow, {@code false} for triangle arrow
 	 * @param arrowSize the width of the painted arrow (for vertical direction) (will be scaled)
+	 * @param arrowThickness the thickness of the painted chevron arrow (will be scaled)
 	 * @param xOffset an offset added to the x coordinate of the arrow to paint it out-of-center. Usually zero. (will be scaled)
 	 * @param yOffset an offset added to the y coordinate of the arrow to paint it out-of-center. Usually zero. (will be scaled)
 	 *
-	 * @since 1.1
+	 * @since 3
 	 */
 	public static void paintArrow( Graphics2D g, int x, int y, int width, int height,
-		int direction, boolean chevron, int arrowSize, float xOffset, float yOffset )
+		int direction, boolean chevron, int arrowSize, float arrowThickness,
+		float xOffset, float yOffset )
 	{
 		// compute arrow width/height
 		// - make chevron arrows one pixel smaller because coordinates are based on center of pixels (0.5/0.5)
@@ -817,7 +819,7 @@ debug*/
 		Shape arrowShape = createArrowShape( direction, chevron, aw, ah );
 		if( chevron ) {
 			Stroke oldStroke = g.getStroke();
-			g.setStroke( new BasicStroke( UIScale.scale( 1f ) ) );
+			g.setStroke( new BasicStroke( UIScale.scale( arrowThickness ) ) );
 			drawShapePure( g, arrowShape );
 			g.setStroke( oldStroke );
 		} else {
