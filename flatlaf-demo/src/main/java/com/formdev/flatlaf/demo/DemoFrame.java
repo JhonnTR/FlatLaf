@@ -44,6 +44,8 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.extras.FlatUIDefaultsInspector;
 import com.formdev.flatlaf.extras.components.FlatButton;
 import com.formdev.flatlaf.extras.components.FlatButton.ButtonType;
+import com.formdev.flatlaf.fonts.inter.FlatInterFont;
+import com.formdev.flatlaf.fonts.jetbrains_mono.FlatJetBrainsMonoFont;
 import com.formdev.flatlaf.icons.FlatAbstractIcon;
 import com.formdev.flatlaf.extras.FlatSVGUtils;
 import com.formdev.flatlaf.ui.FlatUIUtils;
@@ -67,6 +69,10 @@ class DemoFrame
 
 	DemoFrame() {
 		int tabIndex = DemoPrefs.getState().getInt( FlatLafDemo.KEY_TAB, 0 );
+
+		if( SystemInfo.isJava_11_orLater )
+			FlatInterFont.install();
+		FlatJetBrainsMonoFont.install();
 
 		availableFontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment()
 			.getAvailableFontFamilyNames().clone();
@@ -343,7 +349,7 @@ class DemoFrame
 		fontMenu.addSeparator();
 		ArrayList<String> families = new ArrayList<>( Arrays.asList(
 			"Arial", "Cantarell", "Comic Sans MS", "Courier New", "DejaVu Sans",
-			"Dialog", "Liberation Sans", "Monospaced", "Noto Sans", "Roboto",
+			"Dialog", "Inter", "JetBrains Mono", "Liberation Sans", "Monospaced", "Noto Sans", "Roboto",
 			"SansSerif", "Segoe UI", "Serif", "Tahoma", "Ubuntu", "Verdana" ) );
 		if( !families.contains( currentFamily ) )
 			families.add( currentFamily );
