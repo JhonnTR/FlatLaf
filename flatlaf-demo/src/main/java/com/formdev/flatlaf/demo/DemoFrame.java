@@ -45,7 +45,6 @@ import com.formdev.flatlaf.extras.FlatUIDefaultsInspector;
 import com.formdev.flatlaf.extras.components.FlatButton;
 import com.formdev.flatlaf.extras.components.FlatButton.ButtonType;
 import com.formdev.flatlaf.fonts.inter.FlatInterFont;
-import com.formdev.flatlaf.fonts.jetbrains_mono.FlatJetBrainsMonoFont;
 import com.formdev.flatlaf.icons.FlatAbstractIcon;
 import com.formdev.flatlaf.extras.FlatSVGUtils;
 import com.formdev.flatlaf.ui.FlatUIUtils;
@@ -65,14 +64,11 @@ class DemoFrame
 	extends JFrame
 {
 	private final String[] availableFontFamilyNames;
+	private boolean interFontInstalled;
 	private int initialFontMenuItemCount = -1;
 
 	DemoFrame() {
 		int tabIndex = DemoPrefs.getState().getInt( FlatLafDemo.KEY_TAB, 0 );
-
-		if( SystemInfo.isJava_11_orLater )
-			FlatInterFont.install();
-		FlatJetBrainsMonoFont.install();
 
 		availableFontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment()
 			.getAvailableFontFamilyNames().clone();
@@ -285,6 +281,12 @@ class DemoFrame
 	private void fontFamilyChanged( ActionEvent e ) {
 		String fontFamily = e.getActionCommand();
 
+		// install Inter font on demand
+		if( fontFamily.equals( FlatInterFont.FAMILY ) && !interFontInstalled ) {
+			FlatInterFont.install();
+			interFontInstalled = true;
+		}
+
 		FlatAnimatedLafChange.showSnapshot();
 
 		Font font = UIManager.getFont( "defaultFont" );
@@ -349,7 +351,7 @@ class DemoFrame
 		fontMenu.addSeparator();
 		ArrayList<String> families = new ArrayList<>( Arrays.asList(
 			"Arial", "Cantarell", "Comic Sans MS", "Courier New", "DejaVu Sans",
-			"Dialog", "Inter", "JetBrains Mono", "Liberation Sans", "Monospaced", "Noto Sans", "Roboto",
+			"Dialog", "Inter", "Liberation Sans", "Monospaced", "Noto Sans", "Roboto",
 			"SansSerif", "Segoe UI", "Serif", "Tahoma", "Ubuntu", "Verdana" ) );
 		if( !families.contains( currentFamily ) )
 			families.add( currentFamily );
@@ -357,8 +359,9 @@ class DemoFrame
 
 		ButtonGroup familiesGroup = new ButtonGroup();
 		for( String family : families ) {
-			if( Arrays.binarySearch( availableFontFamilyNames, family ) < 0 )
-				continue; // not available
+			if( Arrays.binarySearch( availableFontFamilyNames, family ) < 0 &&
+				!family.equals( FlatInterFont.FAMILY ) )
+			  continue; // not available
 
 			JCheckBoxMenuItem item = new JCheckBoxMenuItem( family );
 			item.setSelected( family.equals( currentFamily ) );
